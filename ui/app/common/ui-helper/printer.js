@@ -30,7 +30,7 @@ angular.module('bahmni.common.uiHelper')
                 }, false);
             };
 
-            var print = function (templateUrl, data) {
+            var print = function (templateUrl, data, afterPrint) {
                 $rootScope.isBeingPrinted = true;
                 $http.get(templateUrl).then(function (templateData) {
                     var template = templateData.data;
@@ -45,6 +45,9 @@ angular.module('bahmni.common.uiHelper')
                         // Replace printHtml with openNewWindow for debugging
                             printHtml(element.html()).then(function () {
                                 $rootScope.isBeingPrinted = false;
+                                if (afterPrint) {
+                                    afterPrint();
+                                }
                                 renderAndPrintPromise.resolve();
                             });
                             printScope.$destroy();

@@ -1,0 +1,28 @@
+<div>
+    <article class="form-field patient-name-wrapper">
+        <div class="field-attribute">
+            <label for="referredTo">
+                {{ ::'REFERRAL_LABEL_DEPARTMENT' | translate}}:
+            </label>
+        </div>
+        <div class="field-value" ng-if="!isDepartmentAutoComplete()">
+           <span ng-repeat="department in allDepartments">
+                    <button type="button" class="grid-row-element"
+                            ng-disabled="hasActiveToken()"
+                            title="{{ department.value }}"
+                            ng-class="{'active': department.key === referral.department.key}"
+                            ng-click="referral.setOrClearDepartment(department)">
+                        <i class="fa fa-ok"></i>{{::department.value | titleTranslate}}
+                    </button>
+            </span>
+        </div>
+        <div class="field-value" ng-if="isDepartmentAutoComplete()">
+            <input name="departmentQuery" ng-model="referral.departmentDisplay" type="text" on-select="handleSelectDepartment"
+                   bahmni-autocomplete source="searchDepartment"
+                   ng-disabled="hasActiveToken()"
+                   response-map="mapKeyValueResponse"
+                   placeholder="Search Department"
+            >
+        </div>
+    </article>
+</div>

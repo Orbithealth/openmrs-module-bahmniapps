@@ -8,14 +8,9 @@ angular.module('bahmni.common.domain')
                 encounter.observations.forEach(function (obs) {
                     stripExtraConceptInfo(obs);
                 });
-                var bacterilogyMembers = getBacteriologyGroupMembers(encounter);
-                bacterilogyMembers = bacterilogyMembers.reduce(function (mem1, mem2) {
-                    return mem1.concat(mem2);
-                }, []);
-                bacterilogyMembers.forEach(function (mem) {
-                    deleteIfImageOrVideoObsIsVoided(mem);
-                });
+
                 encounter.providers = encounter.providers || [];
+
                 var providerData = $bahmniCookieStore.get(Bahmni.Common.Constants.grantProviderAccessDataCookieName);
                 if (_.isEmpty(encounter.providers)) {
                     if (providerData && providerData.uuid) {
@@ -25,25 +20,6 @@ angular.module('bahmni.common.domain')
                     }
                 }
                 return encounter;
-            };
-
-            var getBacteriologyGroupMembers = function (encounter) {
-                var addBacteriologyMember = function (bacteriologyGroupMembers, member) {
-                    bacteriologyGroupMembers = member.groupMembers.length ? bacteriologyGroupMembers.concat(member.groupMembers) :
-                        bacteriologyGroupMembers.concat(member);
-                    return bacteriologyGroupMembers;
-                };
-                return encounter.extensions && encounter.extensions.mdrtbSpecimen ? encounter.extensions.mdrtbSpecimen.map(function (observation) {
-                    var bacteriologyGroupMembers = [];
-                    observation.sample.additionalAttributes && observation.sample.additionalAttributes.groupMembers.forEach(function (member) {
-                        bacteriologyGroupMembers = addBacteriologyMember(bacteriologyGroupMembers, member);
-                    });
-
-                    observation.report.results && observation.report.results.groupMembers.forEach(function (member) {
-                        bacteriologyGroupMembers = addBacteriologyMember(bacteriologyGroupMembers, member);
-                    });
-                    return bacteriologyGroupMembers;
-                }) : [];
             };
 
             var getDefaultEncounterType = function () {
@@ -161,10 +137,9 @@ angular.module('bahmni.common.domain')
                     withCredentials: true
                 });
             };
-            this.findByEncounterUuid = function (encounterUuid, params) {
-                params = params || {includeAll: true};
+            this.findByEncounterUuid = function (encounterUuid) {
                 return $http.get(Bahmni.Common.Constants.bahmniEncounterUrl + '/' + encounterUuid, {
-                    params: params,
+                    params: {includeAll: true},
                     withCredentials: true
                 });
             };

@@ -21,7 +21,7 @@ angular.module('bahmni.common.displaycontrol.pacsOrders')
                     return orderService.getOrders(params).then(function (response) {
                         $scope.bahmniOrders = response.data;
                         _.each($scope.bahmniOrders, function (order) {
-                            order.pacsImageUrl = ($scope.config.pacsImageUrl || "").replace('{{patientID}}', $scope.patient.identifier).replace('{{orderNumber}}', order.orderNumber);
+                            order.pacsImageUrl = $scope.config.pacsImageUrl; // ($scope.config.pacsImageUrl || "").replace('{{patientID}}', $scope.patient.identifier).replace('{{orderNumber}}', order.orderNumber);
                         });
                     });
                 };
@@ -46,12 +46,19 @@ angular.module('bahmni.common.displaycontrol.pacsOrders')
                 };
 
                 $scope.openImage = function (bahmniOrder) {
-                    var url = bahmniOrder.pacsImageUrl;
-                    spinner.forAjaxPromise($.ajax({type: 'HEAD', url: url, async: false}).then(
+                    var url = bahmniOrder.pacsImageUrl + "?AccessionNumber=" + bahmniOrder.orderNumber;
+                    spinner.forAjaxPromise($.ajax({type: 'HEAD', url: url}).then(
                         function () {
                             $window.open(url, "_blank");
-                        }, function () {
-                        messagingService.showMessage("info", "No image available yet for order: " + $scope.getLabel(bahmniOrder));
+                        }, function (response) {
+                        if (response.status === 0) { // since certificate errors generate status code 0, we try this here
+                            // try to open the page and hope for the best
+                            $window.open(url, "_blank");
+                        }
+                        else {
+                            messagingService.showMessage("info", "No image available yet for order: " + $scope.getLabel(bahmniOrder));
+                            $scope.$apply();
+                        }
                     }));
                 };
 

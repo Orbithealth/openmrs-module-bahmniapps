@@ -1,0 +1,185 @@
+<div class="patient-queue-container">
+    <div class="queue-left">
+        <div ng-if="isQueueAdded()" class="queue-edit">
+            <div class="queue-item"><b>{{ queue.name }} ({{ queue.department.value }})</b></div>
+            <div class="queue-item" ng-if="queue.serviceProvider.serviceLocation.value">
+                {{ 'REGISTRATION_QUEUE_SERVICE_LABEL' | translate }}: <b>{{ queue.serviceProvider.serviceLocation.value }}</b>
+            </div>
+            <div class="queue-item" ng-if="queue.serviceProvider.provider.value">
+                {{ 'REGISTRATION_QUEUE_PROVIDER_LABEL' | translate }}: <b>{{ queue.serviceProvider.provider.value }}</b>
+            </div>
+            <div class="queue-item">
+                {{ 'REGISTRATION_QUEUE_TOKEN_LABEL' | translate }}: <b>{{ queue.selectedToken.tokenNumber }}</b>
+            </div>
+            <div ng-if="queue.isTokenAssigned()" class="queue-item"><b>{{ ::queue.getTokenState() | translate }}</b></div>
+            <div class="queue-item">
+                <span class="right">
+                    <button ng-if="!queue.server" class="button search-button" type="button" ng-click="editQueue()">
+                        {{ 'EDIT_LABEL' | translate }}
+                    </button>
+                    <button class="button" type="button" ng-click="deleteQueue()">
+                        <i class="fa fa-trash-o"></i>
+                    </button>
+                </span>
+            </div>
+        </div>
+        <div ng-if="!isQueueAdded() && requestProcessed && (!queueList || queueList.length == 0)" style="background:#fcfcfc;border:1px solid #ccc;border-radius:5px;box-shadow:2px 2px 2px #ccc;padding:8px;">
+            <p style="padding:5px;">
+                <i class="fa fa-exclamation-triangle" style="font-size: 150%;color:#cf1919" aria-hidden="true"></i>
+                <strong>Can't find queues for this OPD. These are the possible reasons:</strong>
+            </p>
+            <ol style="margin-left:25px;">
+                <li style="padding: 5px;">The status of the queues defined for this OPD might be <strong>"Inactive" or "Paused"</strong>. <a href="/queue-management">Click here to go to Queue Management app</a> and change the status of the queues for your OPD to <strong>"Live"</strong>.
+                </li>
+                <li style="padding:5px;">There might not be any queue defined for this OPD. (contact support)</li>
+                <li style="padding:5px;">The queue provider service might not have been started. (contact support)</li>
+            </ol>
+        </div>
+        <div ng-if="!isQueueAdded()">
+            <div class="search-form" ng-if="!loggedInLocation && !location">
+                <input name="qdepartment" ng-model="query.department" type="text" on-select="handleSelectDepartment"
+                       bahmni-autocomplete source="searchDepartment"
+                       response-map="mapKeyValueResponse"
+                       ng-class="{illegalValue: false}"
+                       placeholder="Department"
+                >
+                <input name="qService" ng-model="query.service" type="text" on-select="handleSelectService"
+                       bahmni-autocomplete source="searchService"
+                       response-map="mapKeyValueResponse"
+                       ng-class="{illegalValue: false}"
+                       placeholder="Service"
+                >
+                <input name="qProvider" ng-model="query.provider" type="text" on-select="handleSelectProvider"
+                       bahmni-autocomplete source="searchProvider"
+                       response-map="mapKeyValueResponse"
+                       ng-class="{illegalValue: false}"
+                       placeholder="Doctor"
+                >
+                <button class="button search-button" type="button" ng-click="handleClickSearch()">{{ 'REGISTRATION_QUEUE_SEARCH_LABEL' | translate }}</button>
+                <button class="button" type="button" ng-click="handleClickClear()">{{ 'REGISTRATION_QUEUE_CLEAR_LABEL' | translate }}</button>
+            </div>
+            <div class="queue-container" ng-repeat="queue in queueList">
+                <div class="queue-header" ng-click="toggleQueue($index)">
+                    <i ng-if="queue.expanded" class="fa fa-angle-down"></i>
+                    <i ng-if="!queue.expanded" class="fa fa-angle-right"></i>
+                    <h2>{{ queue.name }} ({{ queue.department.value }})</h2>
+                    <div class="queue-department">
+                        <div class="service-token">
+                            <h2 class="right">{{ queue.getServiceProviderDisplay(queue.serviceProvider) }}</h2>
+                            <h2 class="right">{{ queue.selectedToken.tokenNumber }}</h2>
+                        </div>
+                    </div>
+                </div>
+                <div class="padding-1" ng-if="queue.expanded">
+                    <div class="queue-details">
+                        <div class="token-grid">
+                            <!--- <div><b>{{ queue.department.value }}</b></div> --->
+                            <div>Priority</div>
+                            <div class="queue-priority">
+                                <label>
+                                    <input name="qPriority" type="radio" ng-model="queue.priority" value="NORMAL" ng-change="queue.resetToken()">
+                                    {{ 'REGISTRATION_QUEUE_TOKEN_NORMAL' | translate }}
+                                </label>
+                                <label>
+                                    <input name="qPriority" type="radio" ng-model="queue.priority" value="HIGH" ng-change="queue.resetToken()">
+                                    {{ 'REGISTRATION_QUEUE_TOKEN_HIGH' | translate }}
+                                </label>
+                            </div>
+                            <div class="token-container" ng-if="queue.priority === 'HIGH'">
+                                <div class="token" ng-repeat="token in queue.priorityTokens">
+                                    <button type="button" class="token-button"
+                                            ng-disabled="token.state !== 'NOT_ASSIGNED'"
+                                            title="{{ token.tokenNumber }}"
+                                            ng-class="{'active': queue.selectedToken.id === token.id}"
+                                            ng-click="queue.selectToken(token)">
+                                        <i class="fa fa-ok"></i>{{::token.tokenNumber}}
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="token-container" ng-if="queue.priority === 'NORMAL'">
+                                <div class="token" ng-repeat="token in queue.normalTokens">
+                                    <button type="button" class="token-button"
+                                            ng-disabled="token.state !== 'NOT_ASSIGNED'"
+                                            title="{{ token.tokenNumber }}"
+                                            ng-class="{'active': queue.selectedToken.id === token.id}"
+                                            ng-click="queue.selectToken(token)">
+                                        <i class="fa fa-ok"></i>{{::token.tokenNumber}}
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="mt-05">
+                                {{ 'REGISTRATION_QUEUE_CURRENT_TOKEN' | translate }}: {{ queue.getCurrentToken() }}
+                            </div>
+                            <div class="mt-05">
+                                {{ 'REGISTRATION_QUEUE_SELECTED_TOKEN' | translate }}: {{ queue.selectedToken.tokenNumber }}
+                            </div>
+                        </div>
+                        <div class="service-location-grid">
+                            <div>{{ 'REGISTRATION_QUEUE_SERVICE_DOCTOR' | translate }}</div>
+                            <div>
+                                <label ng-if="::(!queue.providerRequired)">
+                                    <input name="qServiceProvider" type="radio" ng-model="queue.service" value="" ng-change="queue.selectService(qService)">
+                                    {{ 'REGISTRATION_QUEUE_SERVICE_DOCTOR_NO_SELECTION' | translate }}
+                                </label>
+                                <label ng-repeat="qService in queue.queueLocationDtos">
+                                    <input name="qServiceProvider" type="radio" data-ng-model="queue.service" data-ng-value="{{ qService.id }}" ng-change="queue.selectService(qService)">
+                                    {{queue.getServiceProviderDisplay(qService)}}
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="queue-buttons">
+                        <div class="display-flex">
+                            <button class="button" type="button" ng-click="toggleQueue($index)">{{ 'CANCEL_KEY' | translate }}</button>
+                            <button class="button search-button" type="button" ng-click="addQueue(queue)">{{ 'ADD_KEY' | translate }}</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="queue-right">
+        <div>
+            <section class="app-dashboard-integration">
+                <h2 class="section-title">{{ 'REGISTRATION_APPOINTMENTS_LABEL' | translate }}</h2>
+                <div class="concept-set-container-view">
+                    <section class="block hierarchy grey-border">
+                        <ul class="form-field">
+                            <li ng-repeat="(key,value) in allAppointments">
+                                <div toggle="value.expanded" class="appointment-group-header">
+                                    <i ng-if="value.expanded" class="fa fa-angle-down"></i>
+                                    <i ng-if="!value.expanded" class="fa fa-angle-right"></i>
+                                    {{ value.label | translate }}
+                                </div>
+                                <div>
+                                    <div ng-if="value.expanded" class="bg-white">
+                                        <ul class="form-field">
+                                            <li ng-repeat="appointment in value.appointments">
+                                                <div toggle="appointment.expanded" class="appointment-date-header">
+                                                    <i ng-if="appointment.expanded" class="fa fa-angle-down"></i>
+                                                    <i ng-if="!appointment.expanded" class="fa fa-angle-right"></i>
+                                                    {{ appointment["QUEUE_TITLE_APPOINTMENTS_DATE_KEY"] | bahmniDateTime }}
+                                                </div>
+                                                <div ng-if="appointment.expanded" class="appointment-details">
+                                                    <table>
+                                                        <tr ng-repeat="(key, value) in appointment" ng-if="shouldAppointmentKeyBeShown(key)">
+                                                            <td>{{ key | translate }}</td>
+                                                            <td><b>{{ value }}</b></td>
+                                                        </tr>
+                                                    </table>
+                                                </div>
+                                            </li>
+                                            <li ng-if="value.appointments.length === 0" class="empty-header">
+                                                {{ 'REGISTRATION_NO_APPOINTMENTS_MESSAGE' | translate }}
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+                    </section>
+                </div>
+            </section>
+        </div>
+    </div>
+</div>

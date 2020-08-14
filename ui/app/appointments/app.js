@@ -81,8 +81,7 @@ angular
                 params: {
                     viewDate: null,
                     doFetchAppointmentsData: true,
-                    appointmentsData: null,
-                    weekView: false
+                    appointmentsData: null
                 },
                 views: {
                     'content@viewAppointments': {
@@ -141,7 +140,7 @@ angular
                     }
                 }
             }).state('home.manage.appointments.list.new', {
-                url: '/new',
+                url: '/new/:puuid/:location',
                 views: {
                     'content@appointment': {
                         templateUrl: 'views/manage/newAppointment.html',

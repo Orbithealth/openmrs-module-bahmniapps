@@ -1,9 +1,10 @@
 'use strict';
 
-Bahmni.Common.Domain.Diagnosis = function (codedAnswer, order, certainty, existingObsUuid, freeTextAnswer, diagnosisDateTime, voided) {
+Bahmni.Common.Domain.Diagnosis = function (codedAnswer, order, certainty, type, existingObsUuid, freeTextAnswer, diagnosisDateTime, voided) {
     var self = this;
     self.codedAnswer = codedAnswer;
     self.order = order;
+    self.type = type || 'NEW';
     self.certainty = certainty;
     self.existingObs = existingObsUuid;
     self.freeTextAnswer = freeTextAnswer;
@@ -48,6 +49,9 @@ Bahmni.Common.Domain.Diagnosis = function (codedAnswer, order, certainty, existi
     };
     self.isValidOrder = function () {
         return self.isEmpty() || self.order !== undefined;
+    };
+    self.isValidType = function () {
+        return self.isEmpty() || self.type !== undefined;
     };
 
     self.isValidCertainty = function () {

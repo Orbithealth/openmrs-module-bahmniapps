@@ -1,22 +1,20 @@
 'use strict';
 
-Bahmni.ObservationForm = function (formUuid, user, formName, formVersion, observations, label, extension) {
+Bahmni.ObservationForm = function (formUuid, user, formName, formVersion, observations, extension) {
     var self = this;
 
     var init = function () {
         self.formUuid = formUuid;
         self.formVersion = formVersion;
         self.formName = formName;
-        self.label = label;
+        self.label = formName;
         self.conceptName = formName;
         self.collapseInnerSections = {value: false};
         self.alwaysShow = user.isFavouriteObsTemplate(self.conceptName);
         self.observations = [];
         _.each(observations, function (observation) {
-            var observationFormField = observation.formFieldPath ?
-                Bahmni.Common.Util.FormFieldPathUtil.getFormNameAndVersion(observation.formFieldPath) : null;
-            if (observationFormField && observationFormField.formName === formName
-                && observationFormField.formVersion == formVersion) {
+            var observationFormField = observation.formFieldPath ? (observation.formFieldPath.split("/")[0]).split('.') : null;
+            if (observationFormField && observationFormField[0] === formName && observationFormField[1] === formVersion) {
                 self.observations.push(observation);
             }
         });
@@ -93,12 +91,8 @@ Bahmni.ObservationForm = function (formUuid, user, formName, formVersion, observ
 
     Object.defineProperty(self, "isAdded", {
         get: function () {
-            if (self.added === undefined) {
-                if (self.options.default) {
-                    self.added = true;
-                } else {
-                    self.added = self.hasSomeValue();
-                }
+            if (self.hasSomeValue()) {
+                self.added = true;
             }
             return self.added;
         },

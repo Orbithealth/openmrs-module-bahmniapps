@@ -1,6 +1,6 @@
 'use strict';
-angular.module('bahmni.common.displaycontrol.pivottable').directive('pivotTable', ['$rootScope', '$filter', '$stateParams', 'spinner', 'pivotTableService', 'appService', 'conceptSetUiConfigService', '$interval',
-    function ($rootScope, $filter, $stateParams, spinner, pivotTableService, appService, conceptSetUiConfigService, $interval) {
+angular.module('bahmni.common.displaycontrol.pivottable').directive('pivotTable', ['$rootScope', 'ethiopianConvert', '$filter', '$stateParams', 'spinner', 'pivotTableService', 'appService', 'conceptSetUiConfigService', '$interval',
+    function ($rootScope, ethiopianConvert, $filter, $stateParams, spinner, pivotTableService, appService, conceptSetUiConfigService, $interval) {
         return {
             scope: {
                 patientUuid: "=",
@@ -21,7 +21,10 @@ angular.module('bahmni.common.displaycontrol.pivottable').directive('pivotTable'
                 scope.groupByVisits = scope.groupBy === "visits";
 
                 scope.getOnlyDate = function (startdate) {
-                    return Bahmni.Common.Util.DateUtil.formatDateWithoutTime(startdate);
+                    var formated = Bahmni.Common.Util.DateUtil.formatDateWithoutTime(startdate);
+                    formated += ethiopianConvert.toEthiopian(startdate);
+
+                    return formated;
                 };
 
                 scope.getOnlyTime = function (startDate) {

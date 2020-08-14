@@ -13,7 +13,6 @@ Bahmni.Common = Bahmni.Common || {};
     var BACTERIOLOGY = RESTWS_V1;
     var BASE_URL = hostUrl + "/bahmni_config/openmrs/apps/";
     var CUSTOM_URL = hostUrl + "/implementation_config/openmrs/apps/";
-    var IE_APPS_API = RESTWS_V1 + "/bahmniie";
 
     var serverErrorMessages = [
         {
@@ -111,11 +110,11 @@ Bahmni.Common = Bahmni.Common || {};
         drugImportUrl: BAHMNI_CORE + "/admin/upload/drug",
         labResultsImportUrl: BAHMNI_CORE + "/admin/upload/labResults",
         referenceTermsImportUrl: BAHMNI_CORE + "/admin/upload/referenceterms",
-        updateReferenceTermsImportUrl: BAHMNI_CORE + "/admin/upload/referenceterms/new",
         relationshipImportUrl: BAHMNI_CORE + "/admin/upload/relationship",
         conceptSetExportUrl: BAHMNI_CORE + "/admin/export/conceptset?conceptName=:conceptName",
         patientImportUrl: BAHMNI_CORE + "/admin/upload/patient",
         adminImportStatusUrl: BAHMNI_CORE + "/admin/upload/status",
+        adminReservedIdentifierUrl: BAHMNI_CORE + "/admin/reservedIdentifier",
         programUrl: RESTWS_V1 + "/program",
         programEnrollPatientUrl: RESTWS_V1 + "/bahmniprogramenrollment",
         programStateDeletionUrl: RESTWS_V1 + "/programenrollment",
@@ -254,11 +253,13 @@ Bahmni.Common = Bahmni.Common || {};
         followUpConditionConcept: 'Follow-up Condition',
         localeLangs: "/bahmni_config/openmrs/apps/home/locale_languages.json",
         privilegeRequiredErrorMessage: "PRIVILEGE_REQUIRED",
-        patientFormsUrl: BAHMNI_CORE + "/patient/{patientUuid}/forms",
         defaultPossibleRelativeSearchLimit: 10,
-        formBuilderDisplayControlType: "formsV2",
-        formBuilderType: "v2",
-        formBuilderTranslationApi: IE_APPS_API + '/form/translate'
+        nuacareQueueUrl: hostUrl + "/nuacare-queue-mgmt",
+        appointmentUrl: RESTWS_V1 + "/appointment",
+        radScheduleUrl: BAHMNI_CORE + "/RadOrderAppointment",
+        patientMovementAdmit: "adt:admit",
+        patientMovementDischarge: "adt:discharge",
+        patientMovementTransfer: "adt:transfer"
     };
 })();
 

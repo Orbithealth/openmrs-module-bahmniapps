@@ -16,6 +16,7 @@
         <link rel="stylesheet" href="../components/angular-ivh-treeview/dist/ivh-treeview-theme-basic.css"/>
         <link rel="stylesheet" href="../components/ng-tags-input/ng-tags-input.bootstrap.min.css"/>
         <link rel="stylesheet" href="../components/ng-tags-input/ng-tags-input.min.css"/>
+        <link rel="stylesheet" href="../lib/jquery-calendars/css/jquery.calendars.picker.css"/>
         <!-- endbuild -->
     </head>
     <body>
@@ -128,6 +129,16 @@
         <script  src="../components/fullcalendar/dist/fullcalendar.min.js"></script>
         <script  src="../components/fullcalendar-scheduler/dist/scheduler.min.js"></script>
 
+        <script src="../lib/jquery-calendars/js/jquery.plugin.min.js"></script>
+        <script src="../lib/jquery-calendars/js/jquery.calendars.all.min.js"></script>
+        <script src="../lib/jquery-calendars/js/jquery.calendars.ethiopian.min.js"></script>
+        <script src="../lib/jquery-calendars/js/jquery.calendars.ethiopian-am.js"></script>
+
+        <script src="../common/ethiopianDateSelector/init.js"></script>
+        <script src="../common/ethiopianDateSelector/services/ethiopianGregorianConversionService.js"></script>
+        <script src="../common/ethiopianDateSelector/directives/ethiopian-date-selector.js"></script>
+
+
         <script src="init.js"></script>
         <script src="app.js"></script>
         <script src="initialization.js"></script>
@@ -141,7 +152,6 @@
         <script src="models/appointmentViewModel.js"></script>
         <script src="directives/timeValidator.js"></script>
         <script src="directives/dayCalendar.js"></script>
-        <script src="directives/weekCalendar.js"></script>
         <script src="directives/weekdaySelector.js"></script>
         <script src="directives/serviceAvailability.js"></script>
         <script src="directives/serviceTypes.js"></script>
@@ -154,7 +164,6 @@
         <script src="services/specialityService.js"></script>
         <script src="services/appointmentsService.js"></script>
         <script src="services/calendarViewPopUp.js"></script>
-        <script src="services/appointmentCommonService.js"></script>
         <script src="services/checkinPopUp.js"></script>
         <script src="controllers/admin/deleteAppointmentServiceController.js" ></script>
         <script src="controllers/appointmentsHeaderController.js"></script>
@@ -163,7 +172,6 @@
         <script src="controllers/manage/appointmentsCreateController.js"></script>
         <script src="controllers/admin/appointmentServiceController.js"></script>
         <script src="controllers/manage/calendar/appointmentsDayCalendarController.js"></script>
-        <script src="controllers/manage/calendar/appointmentsWeekCalendarController.js"></script>
         <script src="controllers/admin/allAppointmentServicesController.js"></script>
         <script src="controllers/manage/allAppointmentsController.js" ></script>
         <script src="controllers/manage/calendar/appointmentsCalendarViewController.js" ></script>

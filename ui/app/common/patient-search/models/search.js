@@ -71,6 +71,14 @@ Bahmni.Common.PatientSearch.Search = function (searchTypes) {
         return self.searchType && self.searchType.id == searchType.id;
     };
 
+    self.shouldShowQueueAction = function () {
+        return self.searchType && self.searchType.queueAction;
+    };
+
+    self.shouldShowQueueAssignAction = function () {
+        return self.searchType && self.searchType.queueAssignAction;
+    };
+
     self.isCurrentSearchLookUp = function () {
         return self.searchType && self.searchType.handler;
     };

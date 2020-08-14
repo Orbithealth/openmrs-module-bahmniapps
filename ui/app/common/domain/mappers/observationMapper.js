@@ -10,9 +10,10 @@ Bahmni.Common.Domain.ObservationMapper = function () {
             value: openMrsObs.value,
             voided: openMrsObs.voided,
             voidedReason: openMrsObs.voidedReason,
-            observationDateTime: openMrsObs.obsDatetime,
+            observationDateTime: openMrsObs.obsDatetime || openMrsObs.observationDateTime,
             orderUuid: openMrsObs.orderUuid,
-            groupMembers: groupMembers.map(this.map)
+            comment: openMrsObs.comment,
+            groupMembers: groupMembers.map(new Bahmni.Common.Domain.ObservationMapper().map)
         };
     };
 };

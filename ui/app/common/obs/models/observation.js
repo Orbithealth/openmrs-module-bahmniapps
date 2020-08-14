@@ -47,7 +47,8 @@ Bahmni.Common.Obs.Observation = (function () {
             }
             if (this.type === "Datetime" || this.concept && this.concept.dataType === "Datetime") {
                 var date = Bahmni.Common.Util.DateUtil.parseDatetime(this.value);
-                return date != null ? Bahmni.Common.Util.DateUtil.formatDateWithTime(date) : "";
+                var dateStr = Bahmni.Common.Util.DateUtil.getDateTimeInSpecifiedFormat(this.value, "MM-DD-YYYY");
+                return date != null ? Bahmni.Common.Util.DateUtil.formatDateWithTime(date) + " (" + Bahmni.Common.Util.DateUtil.gregToEthMonthName(dateStr) + ")" : "";
             }
             if (this.conceptConfig && this.conceptConfig.displayMonthAndYear) {
                 value = Bahmni.Common.Util.DateUtil.getDateInMonthsAndYears(this.value);
@@ -56,7 +57,8 @@ Bahmni.Common.Obs.Observation = (function () {
                 }
             }
             if (this.type === "Date" || this.concept && this.concept.dataType === "Date") {
-                return this.value ? Bahmni.Common.Util.DateUtil.formatDateWithoutTime(this.value) : "";
+                var dateStr = Bahmni.Common.Util.DateUtil.getDateTimeInSpecifiedFormat(this.value, "MM-DD-YYYY");
+                return this.value ? Bahmni.Common.Util.DateUtil.formatDateWithoutTime(this.value) + " (" + Bahmni.Common.Util.DateUtil.gregToEthMonthName(dateStr) + ")" : "";
             }
 
             if (this.isLocationRef()) {

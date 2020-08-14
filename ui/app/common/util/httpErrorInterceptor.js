@@ -19,8 +19,13 @@ angular.module('httpErrorInterceptor', [])
                 return value.substr(indexOfFirstColon + 1).trim();
             }
 
-            function getServerError (message) {
-                return stringAfter(message, ':');
+            function getServerError (responseData, defaultMessage) {
+                if (responseData.error && responseData.error.message) {
+                    return stringAfter(responseData.error.message, ':');
+                } else if (responseData.message) {
+                    return responseData.message;
+                }
+                return defaultMessage;
             }
 
             function success (response) {
@@ -38,10 +43,10 @@ angular.module('httpErrorInterceptor', [])
                 var data = response.data;
                 var unexpectedError = "There was an unexpected issue on the server. Please try again";
                 if (response.status === 500) {
-                    var errorMessage = data.error && data.error.message ? getServerError(data.error.message) : unexpectedError;
+                    var errorMessage = getServerError(data, unexpectedError);
                     showError(errorMessage);
                 } else if (response.status === 409) {
-                    var errorMessage = data.error && data.error.message ? getServerError(data.error.message) : "Duplicate entry error";
+                    var errorMessage = getServerError(data, "Duplicate entry error");
                     showError(errorMessage);
                 } else if (response.status === 0) {
                     showError("Could not connect to the server. Please check your connection and try again");

@@ -148,6 +148,10 @@ Bahmni.Common.Util.DateUtil = {
         return dateString ? moment(dateString).toDate() : null;
     },
 
+    parseUsingFormat: function (dateString, format) {
+        return dateString ? moment(dateString, format).toDate() : null;
+    },
+
     parseDatetime: function (dateTimeString) {
         return dateTimeString ? moment(dateTimeString) : null;
     },

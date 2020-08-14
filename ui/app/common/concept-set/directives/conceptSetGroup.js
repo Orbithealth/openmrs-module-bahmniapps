@@ -123,13 +123,18 @@ angular.module('bahmni.common.conceptSet')
                     $scope.allTemplates.splice(index, 1);
                 }
                 else {
-                    $scope.allTemplates[index].isAdded = false;
-                    var clonedObj = $scope.allTemplates[index].clone();
-                    $scope.allTemplates[index] = clonedObj;
+                    // var clonedObj = $scope.allTemplates[index].clone();
+                    // $scope.allTemplates[index] = clonedObj;
+                    // cloning the object and assigning will create a new object and loses the relationship that exists
+                    // between the object used to decide to disable/enable adding this template again
                     $scope.allTemplates[index].isAdded = false;
                     $scope.allTemplates[index].isOpen = false;
                     $scope.allTemplates[index].klass = "";
                     $scope.allTemplates[index].isLoaded = false;
+                    $scope.allTemplates.splice(index, 1);
+                    if ($scope.allTemplates.length > 0) { // this ensure one of the remaining template becomes active
+                        $scope.allTemplates[$scope.allTemplates.length - 1].klass = "active";
+                    }
                 }
                 $scope.leftPanelConceptSet = "";
                 messagingService.showMessage("info", $translate.instant("CLINICAL_TEMPLATE_REMOVED_SUCCESS_KEY", {label: label}));

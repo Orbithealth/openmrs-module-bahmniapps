@@ -62,12 +62,13 @@ Bahmni.Appointments.AppointmentViewModel = (function () {
             speciality: appointmentDetails.service && getSpecialityFromConfig(appointmentDetails.service.speciality, config),
             service: appointmentDetails.service && getServiceFromConfig(appointmentDetails.service, config),
             serviceType: appointmentDetails.serviceType && getServiceTypeFromConfig(appointmentDetails.serviceType, config),
-            providers: appointmentDetails.providers || [],
+            provider: appointmentDetails.provider && getProviderFromConfig(appointmentDetails.provider, config),
             location: appointmentDetails.location && getLocationFromConfig(appointmentDetails.location, config),
             date: getDateWithoutTime(appointmentDetails.startDateTime),
             startTime: getTimeWithoutDate(appointmentDetails.startDateTime),
             endTime: getTimeWithoutDate(appointmentDetails.endDateTime),
             appointmentKind: appointmentDetails.appointmentKind,
+            fullDay: appointmentDetails.fullDay,
             status: appointmentDetails.status,
             comments: appointmentDetails.comments
         });

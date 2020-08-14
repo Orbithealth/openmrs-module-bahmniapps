@@ -50,6 +50,12 @@ angular.module('bahmni.common.uiHelper')
                 scope.$apply();
                 scope.$eval(attrs.ngDisabled);
                 scope.$apply();
+
+                if (scope.clearOnSelect) {
+                    element.val("");
+                    scope.selectedValue = null;
+                    return false;
+                }
                 return true;
             },
             search: function (event, ui) {
@@ -99,7 +105,8 @@ angular.module('bahmni.common.uiHelper')
             strictSelect: '=?',
             validationMessage: '@',
             isInvalid: "=?",
-            initialValue: "=?"
+            initialValue: "=?",
+            clearOnSelect: '=?'
         }
     };
 }]);

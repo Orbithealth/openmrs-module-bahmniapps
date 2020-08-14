@@ -5,7 +5,8 @@ angular.module('bahmni.common.gallery')
         function ($rootScope, $document, observationsService, encounterService, spinner, configurations, ngDialog) {
             var $body = $document.find('body');
 
-            $rootScope.$on('$stateChangeStart', function () {
+            $rootScope.$on('$stateChangeStart', function (e) {
+                console.log(e);
                 close();
             });
 

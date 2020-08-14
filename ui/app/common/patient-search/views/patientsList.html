@@ -1,5 +1,5 @@
 <div class="patient-search-wrapper">
-    <div class="tabs">
+    <div class="tabs desktop-menu">
         <button ng-if="search.searchType.showPrint" class="dialog-button-group fr" ng-click="printPage()"
                 accesskey="{{'CLINICAL_PRINT_ACCESS_KEY'| translate}}" ng-bind-html="'CLINICAL_PRINT_TRANSLATION_KEY'|translate">
             <i class="fa fa-print"></i>
@@ -16,6 +16,23 @@
             </li>
         </ul>
     </div>
+    <div class="clinical-header mobile-menu tabs">
+        <a id="MobileDashboardButton" class="mobile-menu-icon" ng-click="toggleDashboardMenu()">
+            <i class="fa fa-bars fa-white fa-small"></i>
+            <span>Menu : {{search.searchType | titleTranslate}}</span>
+        </a>
+        <ul class="header-tabs consultation-tabs" ng-show="showDashboardMenu">
+            <li class="tab-item" ng-repeat="searchType in search.searchTypes"
+                ng-class="{'tab-selected': search.isSelectedSearch(searchType)}">
+                <a href="" ng-click="switchSearchType(searchType)">
+                    <span>{{::searchType | titleTranslate}} </span>
+                    <span ng-if="search.showPatientCountOnSearchParameter(searchType)">({{search.searchResults.length}})</span>
+                    <span ng-if="(searchType.handler && !search.showPatientCountOnSearchParameter(searchType))" scheduler
+                          watch-on="search.searchParameter" refresh-time="searchType.refreshTime">({{searchType.patientCount}})</span>
+                </a>
+            </li>
+        </ul>
+    </div>
     <div class="tab-content" ng-if="::search.searchTypes.length">
         <div class="patient-list-spinner"></div>
         <span ng-if="search.isCurrentSearchLookUp()">
@@ -24,6 +41,10 @@
                     <input type="text" id="patientIdentifier" ng-model="::search.searchParameter"
                            focus-on="search.startPatientSearch"
                            ng-change="search.filterPatients()"/>
+                    <span ng-if="search.searchResults.length > 0 && search.shouldShowQueueAction()">Current Token: <b>{{ search.searchResults[0].currentToken }}</b></span>
+                    <button class="right confirm" type="button" ng-if="search.searchResults.length > 0 && search.shouldShowQueueAction()" ng-click="handleCallNext(search.searchResults[0])">
+                        {{'PATIENT_QUEUE_CALL_NEXT' | translate }}
+                    </button>
                 </div>
             </form>
         </span>
@@ -49,6 +70,8 @@
                     <tr>
                         <!-- <th><strong>Sl.No</strong></th> -->
                         <th ng-repeat="heading in getHeadings(search.visiblePatients)"><strong>{{ ::heading | translate }}</strong></th>
+                        <th ng-if="search.shouldShowQueueAction()"></th>
+                        <th ng-if="search.shouldShowQueueAssignAction() && canSeeAssignQueueAction"></th>
                     </tr>
                     </thead>
                     <tbody>
@@ -65,6 +88,15 @@
                             <span ng-if="::(!isHeadingOfLinkColumn(heading) && !isHeadingOfName(heading))">
                             {{::row[heading]}}
                             </span>
+                        </td>
+                        <td ng-if="search.shouldShowQueueAction()">
+                            <button class="confirm" ng-if="row.tokenStatus !== 'COMPLETED'" ng-click="handleCall(row)">Call</button>
+                        </td>
+                        <td ng-if="search.shouldShowQueueAssignAction() && canSeeAssignQueueAction">
+                            <button class="confirm" style="font-size:0.9em; padding:8px;" ng-if="row.tokenStatus !== 'COMPLETED'" ng-click="assignQueueAction(row)">
+                                <span ng-if="row.queue != ''">Change Doctor</span>
+                                <span ng-if="row.queue == ''">Assign Doctor</span>
+                            </button>
                         </td>
                     </tr>
                     </tbody>
