@@ -38,6 +38,7 @@ angular.module('bahmni.clinical').directive('observationGraph', ['appService', '
                 promises.push(patientService.getPatient($scope.patientUuid));
             }
 
+
             if (config.shouldDrawReferenceLines()) {
                 promises.push(appService.loadCsvFileFromConfig(config.getReferenceDataFileName()));
             }
@@ -60,6 +61,7 @@ angular.module('bahmni.clinical').directive('observationGraph', ['appService', '
                     checkWhetherYAxisIsNumericDataType(yAxisConceptDetails);
                     var referenceData = results[3].data;
                     var ageInMonths = Bahmni.Common.Util.AgeUtil.differenceInMonths(patient.birthdate);
+                    if(ageInMonths > 60 && $scope.params.id === 'Growth-Chart') $scope.params = null;
                     var yAxisUnit = yAxisConceptDetails.units;
                     var observationGraphReferenceModel = new Bahmni.Clinical.ObservationGraphReference(referenceData, config, patient.gender, ageInMonths, yAxisUnit);
                     observationGraphReferenceModel.validate();
