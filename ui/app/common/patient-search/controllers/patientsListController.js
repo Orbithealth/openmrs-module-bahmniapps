@@ -2,12 +2,11 @@
 
 angular.module('bahmni.common.patientSearch')
 .controller('PatientsListController', ['$scope', '$window', 'patientService', '$rootScope', 'appService', 'spinner',
-    '$stateParams', '$bahmniCookieStore', 'printer', 'configurationService', 'queueService',
-    function ($scope, $window, patientService, $rootScope, appService, spinner, $stateParams, $bahmniCookieStore, printer, configurationService, queueService) {
+    '$stateParams', '$bahmniCookieStore', 'printer', 'configurationService',
+    function ($scope, $window, patientService, $rootScope, appService, spinner, $stateParams, $bahmniCookieStore, printer, configurationService) {
         const DEFAULT_FETCH_DELAY = 2000;
         var patientSearchConfig = appService.getAppDescriptor().getConfigValue("patientSearch");
         var patientListSpinner;
-        $scope.canSeeAssignQueueAction = false;
         var initialize = function () {
             var searchTypes = appService.getAppDescriptor().getExtensions("org.bahmni.patient.search", "config").map(mapExtensionToSearchType);
             $scope.search = new Bahmni.Common.PatientSearch.Search(_.without(searchTypes, undefined));
@@ -34,7 +33,6 @@ angular.module('bahmni.common.patientSearch')
             configurationService.getConfigurations(['identifierTypesConfig']).then(function (response) {
                 $scope.primaryIdentifier = _.find(response.identifierTypesConfig, {primary: true}).name;
             });
-            $scope.canSeeAssignQueueAction = $scope.checkPrivilege("app:QueueManagement");
         };
 
         $scope.searchPatients = function () {
@@ -73,7 +71,7 @@ angular.module('bahmni.common.patientSearch')
 
         var hideSpinner = function (spinnerObj, data, container) {
             spinnerObj.hide(data, container);
-            $(container).children('div:first-child').hide();
+            $(container).children('patient-list-spinner').hide();
         };
 
         $scope.getHeadings = function (patients) {
@@ -90,9 +88,6 @@ angular.module('bahmni.common.patientSearch')
             return [];
         };
         $scope.isHeadingOfLinkColumn = function (heading) {
-            if ($scope.search && $scope.search.shouldShowQueueAction && $scope.search.shouldShowQueueAction()) {
-                return false;
-            }
             var identifierHeading = _.includes(Bahmni.Common.PatientSearch.Constants.identifierHeading, heading);
             if (identifierHeading) {
                 return identifierHeading;
@@ -104,9 +99,6 @@ angular.module('bahmni.common.patientSearch')
             }
         };
         $scope.isHeadingOfName = function (heading) {
-            if ($scope.search && $scope.search.shouldShowQueueAction && $scope.search.shouldShowQueueAction()) {
-                return false;
-            }
             return _.includes(Bahmni.Common.PatientSearch.Constants.nameHeading, heading);
         };
         $scope.getPrintableHeadings = function (patients) {
@@ -130,8 +122,6 @@ angular.module('bahmni.common.patientSearch')
                 forwardUrl: appExtn.extensionParams.forwardUrl,
                 id: appExtn.id,
                 params: appExtn.extensionParams.searchParams,
-                queueAction: appExtn.extensionParams.queueAction || false,
-                queueAssignAction: appExtn.extensionParams.queueAssignAction || false,
                 refreshTime: appExtn.extensionParams.refreshTime || 0,
                 view: appExtn.extensionParams.view || Bahmni.Common.PatientSearch.Constants.searchExtensionTileViewType,
                 showPrint: appExtn.extensionParams.showPrint || false,
@@ -149,7 +139,7 @@ angular.module('bahmni.common.patientSearch')
         }, (patientSearchConfig && patientSearchConfig.fetchDelay) || DEFAULT_FETCH_DELAY, {});
 
         var showSpinner = function (spinnerObj, container) {
-            $(container).children('div:first-child').show();
+            $(container).children('patient-list-spinner').show();
             return spinnerObj.show(container);
         };
 
@@ -184,7 +174,7 @@ angular.module('bahmni.common.patientSearch')
             var link = options.forwardUrl ? {
                 url: options.forwardUrl,
                 newTab: true
-            } : {url: $scope.search.searchType.forwardUrl, newTab: $scope.search.shouldShowQueueAction()};
+            } : {url: $scope.search.searchType.forwardUrl, newTab: false};
             if ($scope.search.searchType.links) {
                 link = _.find($scope.search.searchType.links, {linkColumn: heading}) || link;
             }
@@ -216,42 +206,6 @@ angular.module('bahmni.common.patientSearch')
                 });
             }
         };
-        $scope.handleCall = function (row) {
-            spinner.forPromise(queueService.changeTokenState(row.tokenId, 'ONGOING').then(function () {
-                $scope.forwardPatient(row);
-                fetchPatients($rootScope.currentSearchType);
-            }));
-        };
-        $scope.assignQueueAction = function (row) {
-            $window.location = "/bahmni/clinical/index.html#/default/patient/" + row.uuid + "/dashboard/disposition";
-        };
-        $scope.checkPrivilege = function (priv) {
-            return _.find($rootScope.currentUser.privileges, function (privilege) {
-                return privilege.name === priv;
-            });
-        };
-        $scope.handleCallNext = function (row) {
-            var queueId = _.get(row, 'queueId');
-            var queueLocationAssignmentId = _.get(row, 'queueLocationAssignmentId');
-            if (queueId && queueLocationAssignmentId) {
-                spinner.forPromise(queueService.callNextToken(queueId, queueLocationAssignmentId).then(function (response) {
-                    if (response.data) {
-                        $scope.forwardPatient({ uuid: _.get(response.data, 'patient.key') });
-                    }
-                    fetchPatients($rootScope.currentSearchType);
-                }));
-            }
-        };
-        // function to support responsive tabs menu
-        $scope.toggleDashboardMenu = function () {
-            $scope.showDashboardMenu = !$scope.showDashboardMenu;
-        };
-
-        $scope.switchSearchType = function (searchType) {
-            $scope.showDashboardMenu = false;
-            $scope.search.switchSearchType(searchType);
-        };
-
         initialize();
     }
 ]);
