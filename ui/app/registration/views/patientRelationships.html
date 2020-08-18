@@ -72,9 +72,15 @@
                     <div class="field-attribute showOn-small-screen">
                         <label>Till Date</label>
                     </div>
-                    <div class="field-value">
+                    <!-- <div class="field-value">
                         <input type="date" ng-model="newRelationship.endDate" ng-disabled="!newRelationship.relationshipType.uuid"/>
-                    </div>
+                    </div> -->
+                    <ethiopian-date-selector id="date"
+                                             date="newRelationship.endDate"
+                                             min-date="today"
+                                             required="true"
+                                             disabled="!newRelationship.relationshipType.uuid"
+                    ></ethiopian-date-selector>
                 </div>
                 <div class="col col4">
                     <button type="button" class="small-btn row-remover" ng-if="!isEmpty(newRelationship)" ng-click="removeRelationship(newRelationship, $index)">
