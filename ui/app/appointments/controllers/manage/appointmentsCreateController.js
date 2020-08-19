@@ -36,7 +36,10 @@ angular.module('bahmni.appointments')
                         appointmentContext.appointment.provider.person = {display: appointmentContext.appointment.provider.name};
                         appointmentCreateConfig.providers.push(appointmentContext.appointment.provider);
                     }
+
                 }
+                
+                
                 $scope.appointment = Bahmni.Appointments.AppointmentViewModel.create(appointmentContext.appointment || {appointmentKind: 'Scheduled'}, appointmentCreateConfig);
                 $scope.selectedService = appointmentCreateConfig.selectedService;
                 $scope.isPastAppointment = $scope.isEditMode() ? Bahmni.Common.Util.DateUtil.isBeforeDate($scope.appointment.date, moment().startOf('day')) : false;
@@ -57,6 +60,22 @@ angular.module('bahmni.appointments')
                 }
 
                 $scope.appointment.fullDay = true;
+
+                var pageURL = window.location.href;
+                var patientUuid = pageURL.substr(pageURL.lastIndexOf('/') + 1);
+                console.log("patientUuid", patientUuid);
+
+                if(patientUuid !='list'){
+                    patientService.getPatient(patientUuid).then(function (response) {
+                        console.log("getpatient response",response);
+                       $scope.appointment.patient = {label : response.data.person.preferredName.givenName};
+                       $scope.search().then(function (response){
+                           var serachPatient = response.find( ({ uuid }) => uuid === patientUuid );
+                           serachPatient.label = serachPatient.givenName + " " + serachPatient.familyName + " (" + serachPatient.identifier + ")"
+                           $scope.onSelectPatient(serachPatient);
+                        });
+                     });
+                }
             };
 
             $scope.save = function () {
@@ -92,6 +111,7 @@ angular.module('bahmni.appointments')
                     formattedUrl = appService.getAppDescriptor().formatUrl(patientSearchURL, params);
                 }
                 return (spinner.forPromise(formattedUrl ? $http.get(Bahmni.Common.Constants.RESTWS_V1 + formattedUrl) : patientService.search($scope.appointment.patient.label)).then(function (response) {
+                    console.log("response.data.pageOfResults",response.data.pageOfResults)
                     return response.data.pageOfResults;
                 }));
             };
@@ -109,6 +129,7 @@ angular.module('bahmni.appointments')
             };
 
             $scope.onSelectPatient = function (data) {
+                console.log("onSelectPatient data",data)
                 $scope.appointment.patient = data;
                 return spinner.forPromise(appointmentsService.search({patientUuid: data.uuid}).then(function (oldAppointments) {
                     $scope.patientAppointments = oldAppointments.data;
