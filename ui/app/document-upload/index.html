@@ -1,8 +1,8 @@
 <!doctype html>
 <html lang="en">
     <head>
-        <title>Document Upload</title>    
-            
+        <title>Document Upload</title>
+
         <meta charset="utf-8">
         <meta name="HandheldFriendly" content="true">
         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=2.0, user-scalable=yes, minimal-ui" />
@@ -15,6 +15,7 @@
         <link rel="stylesheet" href="../components/ngDialog/css/ngDialog.min.css"/>
         <link rel="stylesheet" href="../components/ngDialog/css/ngDialog-theme-default.min.css"/>
         <link rel="stylesheet" href="../components/ngDialog/css/ngDialog-theme-plain.min.css"/>
+        <link rel="stylesheet" href="../lib/jquery-calendars/css/jquery.calendars.picker.css"/>
         <!-- endbuild -->
 
     </head>
@@ -155,6 +156,23 @@
         <script src="directives/fileUpload.js"></script>
         <script src="directives/dateValidator.js"></script>
         <script src="controllers/documentController.js"></script>
+
+
+        <script src="../common/queue/init.js"></script>
+        <script src="../common/queue/models/queueForm.js"></script>
+        <script src="../common/queue/services/queueService.js"></script>
+        <script src="../common/queue/directives/patientQueue.js"></script>
+
+        <script src="../lib/jquery-calendars/js/jquery.plugin.min.js"></script>
+        <script src="../lib/jquery-calendars/js/jquery.calendars.all.min.js"></script>
+        <script src="../lib/jquery-calendars/js/jquery.calendars.ethiopian.min.js"></script>
+        <script src="../lib/jquery-calendars/js/jquery.calendars.ethiopian-am.js"></script>
+
+
+        <script src="../common/ethiopianDateSelector/init.js"></script>
+        <script src="../common/ethiopianDateSelector/services/ethiopianGregorianConversionService.js"></script>
+        <script src="../common/ethiopianDateSelector/directives/ethiopian-date-selector.js"></script>
+
         <!-- endbuild -->
     </body>
 </html>
