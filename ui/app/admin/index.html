@@ -8,6 +8,7 @@
         <link rel="shortcut icon" type="image/x-icon" href="../favicon.ico">
         <link rel="stylesheet" href="../lib/jquery/jquery-ui-1.10.4.custom.min.css">
         <link rel="stylesheet" href="../styles/clinical.css"/>
+        <link rel="stylesheet" href="../lib/jquery-calendars/css/jquery.calendars.picker.css"/>
 
         <!-- build:css admin.min.css -->
         <link rel="stylesheet" href="../styles/home.css"/>
@@ -95,6 +96,15 @@
         <script src="../common/services/drugService.js"></script>
         <script src="../common/ui-helper/directives/singleSubmit.js"></script>
 
+        <script src="../lib/jquery-calendars/js/jquery.plugin.min.js"></script>
+        <script src="../lib/jquery-calendars/js/jquery.calendars.all.min.js"></script>
+        <script src="../lib/jquery-calendars/js/jquery.calendars.ethiopian.min.js"></script>
+        <script src="../lib/jquery-calendars/js/jquery.calendars.ethiopian-am.js"></script>
+
+
+        <script src="../common/ethiopianDateSelector/init.js"></script>
+        <script src="../common/ethiopianDateSelector/services/ethiopianGregorianConversionService.js"></script>
+        <script src="../common/ethiopianDateSelector/directives/ethiopian-date-selector.js"></script>
 
         <script src="init.js"></script>
         <script src="initialization.js"></script>
@@ -108,8 +118,10 @@
         <script src="controllers/orderSetController.js"></script>
         <script src="controllers/orderTemplateController.js"></script>
         <script src="controllers/adminDashboardController.js"></script>
+        <script src="controllers/reservedPatientIdentifierController.js"></script>
         <script src="services/adminImportService.js"></script>
         <script src="services/adminOrderSetService.js"></script>
+        <script src="services/adminReservedIdentifierService.js"></script>
 
         <script src="../common/orders/init.js"></script>
         <script src="../common/orders/services/orderTypeService.js"></script>

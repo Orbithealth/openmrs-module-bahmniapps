@@ -1,0 +1,64 @@
+<div>
+    <div class="reserved-identifier-container">
+        <header>
+            <p>{{ 'RESERVED_IDENTIFIER_HEADER_LABEL'|translate }}</p>
+        </header>
+        <article id="startFrom">
+            <ul class="">
+                <li ng-repeat="item in list track by $index">
+                    <label>
+                        <input type="radio" name="selectedIndex" data-ng-model="selectedIndex" data-ng-value="{{ $index }}" ng-click="selectIdgenSource($index, item)" />
+                        {{ item.name }}
+                    </label>
+                </li>
+            </ul>
+        </article>
+    </div>
+    <div class="idgen-range-table" ng-if="selected.uuid">
+        <header>
+            <p>{{ selected.name }}</p>
+        </header>
+        <form ng-submit="saveIdgenRange(selected.uuid, range)">
+            <table id="idgenRangeTable" border="0">
+                <thead>
+                <tr>
+                    <th>{{ 'RESERVED_IDENTIFIER_RANGE_START' | translate }}</th>
+                    <th>{{ 'RESERVED_IDENTIFIER_RANGE_END' | translate }}</th>
+                    <th></th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr ng-repeat="aRange in selected.ranges track by $index">
+                    <td>
+                        {{ aRange.start }}
+                    </td>
+                    <td>
+                        {{ aRange.end }}
+                    </td>
+                    <td>
+                        <button class="button" type="button" ng-click="deleteIdGenSourceRange(aRange.uuid)">
+                            <i class="fa fa-trash-o" aria-hidden="true"></i>
+                        </button>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <input name="start" type="number" ng-model="range.start" required />
+                    </td>
+                    <td>
+                        <input name="end" type="number" ng-model="range.end" required min="{{ range.start }}" />
+                    </td>
+                    <td>
+                        <button class="button" type="submit">
+                            Save
+                        </button>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </form>
+    </div>
+    <div id="messageContainer">
+        <p style="text-align: center; color: red; font-weight: bold;">{{ errorMessage }}</p>
+    </div>
+</div>

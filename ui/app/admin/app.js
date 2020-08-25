@@ -2,7 +2,7 @@
 
 angular.module('admin', ['httpErrorInterceptor', 'bahmni.admin', 'bahmni.common.routeErrorHandler', 'ngSanitize',
     'bahmni.common.uiHelper', 'bahmni.common.config', 'bahmni.common.orders', 'bahmni.common.i18n', 'pascalprecht.translate',
-    'ngCookies', 'angularFileUpload', 'bahmni.common.services']);
+    'ngCookies', 'angularFileUpload', 'bahmni.common.services', 'bahmni.common.ethiopianDateSelector']);
 angular.module('admin')
     .config(['$stateProvider', '$httpProvider', '$urlRouterProvider', '$compileProvider', '$bahmniTranslateProvider',
         function ($stateProvider, $httpProvider, $urlRouterProvider, $compileProvider, $bahmniTranslateProvider) {
@@ -52,6 +52,13 @@ angular.module('admin')
                 url: '/auditLog',
                 templateUrl: 'views/auditLog.html',
                 controller: 'auditLogController',
+                data: {
+                    backLinks: [{label: "Home", state: "admin.dashboard", icon: "fa-home"}]
+                }
+            }).state('admin.reservedPatientIdentifier', {
+                url: '/reservedPatientIdentifier',
+                templateUrl: 'views/reservedPatientIdentifier.html',
+                controller: 'reservedPatientIdentifierController',
                 data: {
                     backLinks: [{label: "Home", state: "admin.dashboard", icon: "fa-home"}]
                 }
