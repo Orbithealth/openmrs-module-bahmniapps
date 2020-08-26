@@ -9,6 +9,7 @@
         <link rel="stylesheet" href="../components/ngDialog/css/ngDialog.min.css"/>
         <link rel="stylesheet" href="../components/ngDialog/css/ngDialog-theme-default.min.css"/>
         <link rel="stylesheet" href="../components/ngDialog/css/ngDialog-theme-plain.min.css"/>
+        <link rel="stylesheet" href="../lib/jquery-calendars/css/jquery.calendars.picker.css"/>
 
         <link rel="stylesheet" href="../styles/clinical.css"/>
         <!-- endbuild -->
@@ -184,7 +185,6 @@
         <script src="../common/displaycontrols/dashboard/controllers/patientDashboardDiagnosisController.js"></script>
 
         <script src="../common/displaycontrols/observation/init.js"></script>
-        <script src="../common/displaycontrols/observation/services/formRecordTreeBuildService.js"></script>
         <script src="../common/displaycontrols/observation/directives/bahmniObservation.js"></script>
         <script src="../common/displaycontrols/observation/controllers/allObservationDetailsController.js"></script>
         <script src="../common/displaycontrols/observation/helpers/groupingFunctions.js"></script>
@@ -213,13 +213,27 @@
 
         <script src="../common/displaycontrols/custom/init.js"></script>
         <script src="../common/displaycontrols/custom/directives/customDisplayControl.js"></script>
-        
+
         <script src="../common/i18n/init.js"></script>
         <script src="../common/i18n/bahmni-translate.js"></script>
         <script src="../common/i18n/services/mergeLocaleFilesService.js"></script>
         <script src="../common/ui-helper/directives/singleClick.js"></script>
 
-        <script src="init.js"></script> 
+        <script src="../common/queue/init.js"></script>
+        <script src="../common/queue/models/queueForm.js"></script>
+        <script src="../common/queue/services/queueService.js"></script>
+        <script src="../common/queue/directives/patientQueue.js"></script>
+
+        <script src="../lib/jquery-calendars/js/jquery.plugin.min.js"></script>
+        <script src="../lib/jquery-calendars/js/jquery.calendars.all.min.js"></script>
+        <script src="../lib/jquery-calendars/js/jquery.calendars.ethiopian.min.js"></script>
+        <script src="../lib/jquery-calendars/js/jquery.calendars.ethiopian-am.js"></script>
+
+        <script src="../common/ethiopianDateSelector/init.js"></script>
+        <script src="../common/ethiopianDateSelector/services/ethiopianGregorianConversionService.js"></script>
+
+
+        <script src="init.js"></script>
         <script src="constants.js"></script>
         <script src="app.js"></script>
         <script src="initialization.js"></script>
@@ -241,6 +255,7 @@
         <script src="services/wardService.js"></script>
         <script src="services/queryService.js"></script>
         <script src="services/bedManagementService.js"></script>
+
         <!-- endbuild -->
         <script src="/bahmni_config/openmrs/apps/customDisplayControl/js/customControl.js"></script>
     </body>

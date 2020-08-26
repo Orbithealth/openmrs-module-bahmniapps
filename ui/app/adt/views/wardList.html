@@ -11,10 +11,12 @@
         <tbody>
             <tr ng-repeat="row in tableDetails">
                 <td ng-repeat="heading in tableHeadings" ng-if="heading != 'hiddenAttributes'">
-                    <span ng-if="heading != 'Diagnosis' && heading != 'Id'">{{row[heading]}}</span>
+                    <span ng-if="heading != 'Diagnosis' && heading != 'Id' && heading != 'Admission Time' && heading != 'Disposition Time'">{{row[heading]}}</span>
                     <a ng-if="heading =='Id'" ng-click="gotoPatientDashboard(row['hiddenAttributes'].patientUuid, row['hiddenAttributes'].visitUuid)">
                         {{row[heading]}}
                     </a>
+                    <span ng-if="heading == 'Admission Time'">{{row[heading] | bahmniDateTime}}</span>
+                    <span ng-if="heading == 'Disposition Time'">{{row[heading] | bahmniDateTime}}</span>
                     <div ng-if="heading == 'Diagnosis'">
                         <div ng-repeat="diagnosis in row[heading]" ng-class="{'strike-text': diagnosis.ruledOut}">
                             <span>{{diagnosis.Diagnosis}}</span>

@@ -11,7 +11,13 @@ angular.module('bahmni.adt')
 
             var loadAllWards = function () {
                 return wardService.getWardsList().success(function (wardsList) {
-                    $scope.wards = wardsList.results;
+                    $scope.wards = [];
+                    var ward = _.find(wardsList.results, function (ward) {
+                        return ward.ward.name === $rootScope.currentUser.currentLocation;
+                    });
+                    if (ward) {
+                        $scope.wards.push(ward);
+                    }
                 });
             };
             spinner.forPromise(init());

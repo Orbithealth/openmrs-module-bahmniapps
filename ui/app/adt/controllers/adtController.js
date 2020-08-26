@@ -79,13 +79,21 @@ angular.module('bahmni.adt')
                 var visitSummary = $scope.visitSummary;
                 var stopDate = visitSummary && visitSummary.stopDateTime;
                 var isVisitOpen = (stopDate === null);
-                if (visitSummary && visitSummary.isDischarged() && isVisitOpen) {
-                    return filterAction(actions, ["Undo Discharge"]);
+                var filteredActions = [];
+                if (visitSummary && visitSummary.isDischarged() && isVisitOpen && $scope.checkPrivilege(Bahmni.Common.Constants.patientMovementDischarge)) {
+                    filteredActions = filterAction(actions, ["Undo Discharge"]);
                 } else if (visitSummary && visitSummary.isAdmitted() && isVisitOpen) {
-                    return filterAction(actions, ["Transfer Patient", "Discharge Patient"]);
-                } else {
-                    return filterAction(actions, ["Admit Patient"]);
+                    if ($scope.checkPrivilege(Bahmni.Common.Constants.patientMovementDischarge)) {
+                        filteredActions.push(filterAction(actions, ["Discharge Patient"])[0]);
+                    }
+                    if ($scope.checkPrivilege(Bahmni.Common.Constants.patientMovementTransfer)) {
+                        filteredActions.push(filterAction(actions, ["Transfer Patient"])[0]);
+                    }
+                } else if ($scope.checkPrivilege(Bahmni.Common.Constants.patientMovementAdmit)) {
+                    filteredActions.push(filterAction(actions, ["Admit Patient"])[0]);
                 }
+
+                return filteredActions;
             };
 
             var getVisit = function () {
@@ -115,6 +123,12 @@ angular.module('bahmni.adt')
                             $scope.currentVisitType = $scope.visitSummary.visitType;
                         }
                     }
+                });
+            };
+
+            $scope.checkPrivilege = function (priv) {
+                return _.find($rootScope.currentUser.privileges, function (privilege) {
+                    return privilege.name === priv;
                 });
             };
 
@@ -220,6 +234,8 @@ angular.module('bahmni.adt')
                         scope: $scope,
                         closeByEscape: true
                     });
+
+                    // $scope.closeCurrentVisitAndStartNewVisit();
                 } else {
                     return createEncounterAndContinue();
                 }

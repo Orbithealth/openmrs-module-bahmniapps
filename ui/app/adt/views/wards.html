@@ -2,4 +2,8 @@
     <div ng-repeat="ward in wards">
         <ward ward="ward" read-only="true"></ward>
     </div>
+    <div ng-if="wards.length==0" style="padding:15px">
+        <p>There are no wards to show for your current location. Try changing your login location to the ward you are trying to access.</p>
+        <p><a href='/bahmni/home/#/dashboard'>Click here </a>to go back to the home page, change your location and try again.</p>
+    </div>
 </div>
