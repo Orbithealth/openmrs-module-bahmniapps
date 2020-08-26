@@ -424,6 +424,11 @@ Bahmni.Clinical.DrugOrderViewModel = function (config, proto, encounterDate) {
                 var mantissa = self.uniformDosingType.doseFraction ? self.uniformDosingType.doseFraction.value : 0;
                 var dose = self.uniformDosingType.dose ? self.uniformDosingType.dose : 0;
                 self.quantity = (dose + mantissa) * (self.uniformDosingType.frequency ? getFrequencyPerDay() : 0) * self.durationInDays;
+                if(!_.isNaN(self.quantity) && self.drug != undefined && self.drug.form === 'Suspension'){
+                    var unit = self.drug.name.substr((self.drug.name).indexOf('/')+2); 
+                    var perUnit = parseInt(unit.substr(0,unit.indexOf('ml')));
+                    self.quantity = (self.quantity/perUnit);
+                }
             } else if (self.frequencyType === Bahmni.Clinical.Constants.dosingTypes.variable) {
                 var dose = self.variableDosingType;
                 self.quantity = (dose.morningDose + dose.afternoonDose + dose.eveningDose) * self.durationInDays;
