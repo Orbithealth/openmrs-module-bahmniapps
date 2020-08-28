@@ -15,10 +15,6 @@ angular.module('bahmni.ipd')
                 return queryService.getResponseFromQuery(params).then(function (response) {
                     $scope.tableDetails = response.data;
                     $scope.tableHeadings = $scope.tableDetails.length > 0 ? Object.keys($scope.tableDetails[0]) : [];
-                    $scope.$emit("event:getTableData", {
-                        tableData: $scope.tableDetails,
-                        tableHeader: $scope.tableHeadings
-                    });
                 });
             };
 

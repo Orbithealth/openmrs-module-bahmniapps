@@ -2,17 +2,12 @@
 
 angular.module('bahmni.ipd')
     .service('bedManagementService', [function () {
-        var maxX, maxY, minX, minY;
-
-        var initialiseMinMaxRowColumnNumbers = function () {
-            maxX = 1;
-            maxY = 1;
-            minX = 1;
-            minY = 1;
-        };
+        var maxX = 1;
+        var maxY = 1;
+        var minX = 1;
+        var minY = 1;
 
         this.createLayoutGrid = function (bedLayouts) {
-            initialiseMinMaxRowColumnNumbers();
             self.layout = [];
             findMaxYMaxX(bedLayouts);
             var bedLayout;

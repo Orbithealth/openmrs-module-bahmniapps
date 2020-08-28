@@ -6,6 +6,7 @@ angular.module('bahmni.ipd')
             $scope.wards = null;
             $scope.ward = {};
             $scope.editTagsPrivilege = Bahmni.IPD.Constants.editTagsPrivilege;
+
             var links = {
                 "dashboard": {
                     "name": "inpatient",
@@ -13,7 +14,6 @@ angular.module('bahmni.ipd')
                     "url": "../bedmanagement/#/patient/{{patientUuid}}/visit/{{visitUuid}}/dashboard"
                 }
             };
-            var patientForwardUrl = appService.getAppDescriptor().getConfigValue("patientForwardUrl") || links.dashboard.url;
 
             var isDepartmentPresent = function (department) {
                 if (!department) return false;
@@ -84,8 +84,8 @@ angular.module('bahmni.ipd')
                         rooms: rooms,
                         uuid: department.uuid,
                         name: department.name,
-                        totalBeds: wardDetails[0].totalBeds,
-                        occupiedBeds: wardDetails[0].occupiedBeds
+                        totalBeds: wardDetails[0] ? wardDetails[0].totalBeds : 0,
+                        occupiedBeds: wardDetails[0] ? wardDetails[0].occupiedBeds : 0
                     };
                     $scope.departmentSelected = true;
                     $rootScope.selectedBedInfo.wardName = department.name;
@@ -174,7 +174,7 @@ angular.module('bahmni.ipd')
             $scope.goToAdtPatientDashboard = function () {
                 getVisitInfoByPatientUuid($scope.patient.uuid).then(function (visitUuid) {
                     var options = {patientUuid: $scope.patient.uuid, visitUuid: visitUuid};
-                    var url = appService.getAppDescriptor().formatUrl(patientForwardUrl, options);
+                    var url = appService.getAppDescriptor().formatUrl(links.dashboard.url, options);
                     window.open(url);
                 });
                 if (window.scrollY > 0) {

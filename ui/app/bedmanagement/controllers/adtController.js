@@ -110,6 +110,12 @@ angular.module('bahmni.ipd')
                 return $state.current.name === "bedManagement.patient" && !$scope.editMode;
             };
 
+            $scope.checkPrivilege = function (priv) {
+                return _.find($rootScope.currentUser.privileges, function (privilege) {
+                    return privilege.name === priv;
+                });
+            };
+
             var init = function () {
                 initializeActionConfig();
                 $scope.encounterConfig = $scope.$parent.encounterConfig;
