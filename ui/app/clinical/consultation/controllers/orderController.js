@@ -71,6 +71,8 @@ angular.module('bahmni.clinical')
                 var allLeftCategories = $scope.getOrderTemplate($scope.activeTab.name).setMembers;
                 _.each(allLeftCategories, function (leftCategory) {
                     _.each(leftCategory.setMembers, function (member) {
+                        if($scope.activeTab.name === "Procedure" && leftCategory.groups != undefined)
+                        leftCategory.groups[0].description = "Procedure Orders";
                         if (member.setMembers.length !== 0) {
                             _.each(member.setMembers, function (child) {
                                 if (testConceptToParentsMapping[child.uuid] === undefined) {
@@ -136,8 +138,12 @@ angular.module('bahmni.clinical')
                 collapseExistingActiveSection($scope.activeTab.leftCategory);
                 $scope.activeTab.leftCategory = leftCategory;
                 $scope.activeTab.leftCategory.klass = "active";
-
-                $scope.activeTab.leftCategory.groups = $scope.getConceptClassesInSet(leftCategory);
+                if ($scope.activeTab.name === "Procedure"){
+                    $scope.activeTab.leftCategory.groups = $scope.getConceptClassesInSet(leftCategory);
+                    $scope.activeTab.leftCategory.groups[0].description = "Procedure Orders";
+                }
+                else
+                    $scope.activeTab.leftCategory.groups = $scope.getConceptClassesInSet(leftCategory);
             };
 
             $scope.getConceptClassesInSet = function (conceptSet) {
