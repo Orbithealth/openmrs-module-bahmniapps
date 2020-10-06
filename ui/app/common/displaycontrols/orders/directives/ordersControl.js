@@ -21,8 +21,25 @@ angular.module('bahmni.common.displaycontrol.orders')
                         visitUuid: $scope.visitUuid,
                         orderUuid: $scope.orderUuid
                     };
+                    if($scope.orderType === "Procedure Order") params.orderTypeUuid = orderTypeService.getOrderTypeUuid("Radiology Order");
                     return orderService.getOrders(params).then(function (response) {
-                        $scope.bahmniOrders = response.data;
+                        if($scope.orderType === "Lab Order") {
+                            $scope.bahmniOrders = response.data;
+                        } else {
+                            var orders = [];
+                            _.forEach(response.data, function(data){
+                                var str = data.concept.name;
+                                if(!str.endsWith("procedure") && $scope.orderType === "Radiology Order"){
+                                    //$scope.bahmniOrders = response.data;
+                                    orders.push(data);
+                                } else if(str.endsWith("procedure") && $scope.orderType === "Procedure Order") {
+                                    //$scope.bahmniOrders = response.data;
+                                    orders.push(data);
+                                }
+                            });
+                            $scope.bahmniOrders = orders;
+                        }
+                        //$scope.bahmniOrders = response.data;
                     });
                 };
                 var init = function () {
