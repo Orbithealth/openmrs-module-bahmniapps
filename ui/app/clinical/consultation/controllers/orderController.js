@@ -72,7 +72,14 @@ angular.module('bahmni.clinical')
                 _.each(allLeftCategories, function (leftCategory) {
                     _.each(leftCategory.setMembers, function (member) {
                         if($scope.activeTab.name === "Procedure" && leftCategory.groups != undefined)
-                        leftCategory.groups[0].description = "Procedure Orders";
+                        {
+                            _.each(leftCategory.groups, function(group){
+                                group.description = group.description.toLowerCase();
+                                if(group.description.indexOf("radiology") !== -1){
+                                    group.description = group.description.replace("radiology","Procedure");
+                                }
+                            })
+                        }
                         if (member.setMembers.length !== 0) {
                             _.each(member.setMembers, function (child) {
                                 if (testConceptToParentsMapping[child.uuid] === undefined) {
@@ -140,7 +147,12 @@ angular.module('bahmni.clinical')
                 $scope.activeTab.leftCategory.klass = "active";
                 if ($scope.activeTab.name === "Procedure"){
                     $scope.activeTab.leftCategory.groups = $scope.getConceptClassesInSet(leftCategory);
-                    $scope.activeTab.leftCategory.groups[0].description = "Procedure Orders";
+                   _.each($scope.activeTab.leftCategory.groups, function(group){
+                        group.description = group.description.toLowerCase();
+                        if(group.description.indexOf("radiology") !== -1){
+                            group.description = group.description.replace("radiology","Procedure");
+                        }
+                    })
                 }
                 else
                     $scope.activeTab.leftCategory.groups = $scope.getConceptClassesInSet(leftCategory);
