@@ -142,9 +142,25 @@ angular.module('bahmni.registration')
                     searchPromise.then(function (data) {
                         $scope.results = data.pageOfResults;
                         $scope.noResultsMessage = $scope.results.length === 0 ? 'REGISTRATION_NO_RESULTS_FOUND' : null;
+                        if($scope.results.length != 0)
+                            $scope.results.sort(compare);
                     });
                 }
             };
+
+            function compare(a, b) {
+                // Use toUpperCase() to ignore character casing
+                const givenNameA = a.givenName.toUpperCase();
+                const givenNameB = b.givenName.toUpperCase();
+              
+                let comparison = 0;
+                if (givenNameA > givenNameB) {
+                  comparison = 1;
+                } else if (givenNameA < givenNameB) {
+                  comparison = -1;
+                }
+                return comparison;
+            }
 
             var setPatientIdentifierSearchConfig = function () {
                 $scope.patientIdentifierSearchConfig = {};
