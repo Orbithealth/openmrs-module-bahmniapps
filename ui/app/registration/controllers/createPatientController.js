@@ -94,6 +94,11 @@ angular.module('bahmni.registration')
                 expandSectionsWithDefaultValue();
                 $scope.patientLoaded = true;
             };
+            $scope.submit = function(e) {
+                e.preventDefault()
+                console.log("logger");
+                $rootScope.$broadcast("event:openStartVisitPopup", {});
+              };
 
             init();
 
@@ -183,6 +188,10 @@ angular.module('bahmni.registration')
                 });
                 return deferred.promise;
             };
+
+            $scope.$on('event:createPatient', function () {
+                $scope.create();
+            });
 
             $scope.create = function () {
                 addNewRelationships();

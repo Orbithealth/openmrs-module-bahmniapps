@@ -15,12 +15,17 @@
                 </button>
         </span>
         <span ng-if="::showStartVisitButton()" data-ng-switch-when="startVisit">
-            <div split-button options="::visitControl.visitTypes"
+            <!-- <div split-button options="::visitControl.visitTypes"
                  primary-option="::visitControl.defaultVisitType"
                  option-text="visitControl.startButtonText"
                  option-click="visitControl.startVisit"
                  class="right">
-             </div>
+             </div> -->
+            <div class="retro-date-widget-wrapper fr">
+                <div class="retro-date-widget-header fr">
+                    <button type="submit" class="start-visit-button right">{{ 'REGISTRATION_SELECT_VISIT_TYPE'|translate}}</button>
+                </div>
+            </div>
         </span>
         <span data-ng-switch-when="configAction">
             <button type="submit" class="right confirm" ng-click="setSubmitSource('configAction')"

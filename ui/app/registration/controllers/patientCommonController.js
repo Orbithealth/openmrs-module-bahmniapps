@@ -59,6 +59,11 @@ angular.module('bahmni.registration')
                     ngDialog.openConfirm({template: "../common/ui-helper/views/saveConfirmation.html", scope: $scope});
                 }
             };
+            $scope.popUpHandler = function () {
+                $scope.dialog = ngDialog.open({ template: 'views/defaultDataPopUp.html', className: 'test ngdialog-theme-default',
+                    controller: 'PatientCommonController'});
+                $('body').addClass('show-controller-back');
+            };
 
             $scope.continueWithoutSaving = function () {
                 ngDialog.close();

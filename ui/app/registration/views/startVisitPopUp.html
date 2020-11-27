@@ -1,0 +1,18 @@
+<div class="retro-date-widget-panel">
+    <div class="input-container">
+        <label class="retro-date-label">{{'REGISTRATION_SELECT_VISIT_TYPE'|translate }}</label>
+        <select ng-model="selectedVisitType">
+            <option ng-repeat="visitType in visitControl.visitTypes | orderBy:'name'" value="{{visitType}}">
+                {{visitType.name}}
+            </option>
+        </select>
+    </div>
+    <div class="retro-widget-button-wrapper">
+        <button type="submit" class="retro-widget-button ok_btn start-visit-button" ng-click="startVisit(selectedVisitType)">{{ 'REGISTRATION_START_VISIT'|translate}}</button>
+        <!-- <button class="retro-widget-button" ng-click="closePopUp()">Cancel</button> -->
+    </div>
+    <!-- <div split-button options="::visitControl.visitTypes"
+                 primary-option="::visitControl.defaultVisitType"
+                 option-text="visitControl.startButtonText"
+                 option-click="visitControl.startVisit"> -->
+</div>

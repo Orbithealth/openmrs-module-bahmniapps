@@ -3,10 +3,10 @@
 angular.module('bahmni.registration')
     .directive('patientAction', ['$window', '$location', '$state', 'spinner', '$rootScope', '$stateParams',
         '$bahmniCookieStore', 'appService', 'visitService', 'sessionService', 'encounterService',
-        'messagingService', '$translate', 'auditLogService',
+        'messagingService', '$translate', 'auditLogService', 'ngDialog',
         function ($window, $location, $state, spinner, $rootScope, $stateParams,
                   $bahmniCookieStore, appService, visitService, sessionService, encounterService,
-                  messagingService, $translate, auditLogService) {
+                  messagingService, $translate, auditLogService, ngDialog) {
             var controller = function ($scope) {
                 var self = this;
                 var uuid = $stateParams.patientUuid;
@@ -20,6 +20,15 @@ angular.module('bahmni.registration')
                 showStartVisitButton = (_.isUndefined(showStartVisitButton) || _.isNull(showStartVisitButton)) ? true : showStartVisitButton;
                 var visitLocationUuid = $rootScope.visitLocation;
                 var forwardUrls = forwardUrlsForVisitTypes || false;
+                $scope.selectedVisitTypeUuid = {};
+                $scope.selectedVisitType1 = {};
+
+
+                $scope.isCurrentVisitTypeSelected = function (visitType) {
+                    var val =  defaultVisitType === visitType.name;
+                    if (val) $scope.selectedVisitTypeUuid = visitType.uuid;
+                    return val;
+                };
 
                 var getForwardUrlEntryForVisitFromTheConfig = function () {
                     var matchedEntry = _.find(forwardUrls, function (entry) {
@@ -77,12 +86,22 @@ angular.module('bahmni.registration')
                         }
                         setForwardActionKey();
                     }));
+                   // $scope.selectedVisitType = visitControl != undefined ? visitControl.defaultVisitType: {};
                 };
 
                 $scope.visitControl = new Bahmni.Common.VisitControl(
                     $rootScope.regEncounterConfiguration.getVisitTypesAsArray(),
                     defaultVisitType, encounterService, $translate, visitService
                 );
+
+                $scope.startVisit = function (selectedVisit){
+                    if(selectedVisit != undefined){
+                        console.log("selected visit", selectedVisit);
+                        $scope.visitControl.startVisit($scope.selectedVisitType);
+                        $rootScope.$broadcast("event:createPatient", {});
+                        ngDialog.close();
+                    }                    
+                }
 
                 $scope.visitControl.onStartVisit = function () {
                     $scope.setSubmitSource('startVisit');
@@ -99,6 +118,20 @@ angular.module('bahmni.registration')
                 var goToForwardUrlPage = function (patientData) {
                     var forwardUrl = appService.getAppDescriptor().formatUrl($scope.activeVisitConfig.forwardUrl, {'patientUuid': patientData.patient.uuid});
                     $window.location.href = forwardUrl;
+                };
+
+                $scope.$on('event:openStartVisitPopup', function () {
+                    $scope.startVisitPopUpHandler();
+                });
+
+                $scope.startVisitPopUpHandler = function () {
+                        console.log($scope.visitControl);
+                        $scope.dialog = ngDialog.open({ 
+                            template: 'views/startVisitPopUp.html', 
+                            className: 'test ngdialog-theme-default',
+                            scope: $scope});
+                            $('body').addClass('show-controller-back');
+                    
                 };
 
                 $scope.actions.followUpAction = function (patientProfileData) {
