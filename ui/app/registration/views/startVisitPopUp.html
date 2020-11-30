@@ -1,10 +1,13 @@
 <div class="retro-date-widget-panel">
     <div class="input-container">
         <label class="retro-date-label">{{'REGISTRATION_SELECT_VISIT_TYPE'|translate }}</label>
-        <select ng-model="selectedVisitType">
+        <!-- <select ng-model="selectedVisitType">
             <option ng-repeat="visitType in visitControl.visitTypes | orderBy:'name'" value="{{visitType}}">
                 {{visitType.name}}
             </option>
+        </select> -->
+        <select ng-model="selectedVisitType">
+            <option ng-repeat="visitType in visitControl.visitTypes | orderBy:'name'" ng-value="{{visitType}}">{{visitType.name}}</option>
         </select>
     </div>
     <div class="retro-widget-button-wrapper">

@@ -20,13 +20,14 @@ angular.module('bahmni.registration')
                 showStartVisitButton = (_.isUndefined(showStartVisitButton) || _.isNull(showStartVisitButton)) ? true : showStartVisitButton;
                 var visitLocationUuid = $rootScope.visitLocation;
                 var forwardUrls = forwardUrlsForVisitTypes || false;
-                $scope.selectedVisitTypeUuid = {};
-                $scope.selectedVisitType1 = {};
+                $scope.selectedVisitType = {};
+                $scope.patientRegisterType = "";
+
 
 
                 $scope.isCurrentVisitTypeSelected = function (visitType) {
                     var val =  defaultVisitType === visitType.name;
-                    if (val) $scope.selectedVisitTypeUuid = visitType.uuid;
+                    if (val) $scope.selectedVisitType = visitType;
                     return val;
                 };
 
@@ -96,9 +97,14 @@ angular.module('bahmni.registration')
 
                 $scope.startVisit = function (selectedVisit){
                     if(selectedVisit != undefined){
+                        $scope.selectedVisitType = $scope.visitControl.visitTypes.filter(function (visitType) {
+                            return visitType.name === selectedVisit;
+                        })[0];
                         console.log("selected visit", selectedVisit);
                         $scope.visitControl.startVisit($scope.selectedVisitType);
-                        $rootScope.$broadcast("event:createPatient", {});
+                        if($scope.patientRegisterType == "CREATE")
+                            $rootScope.$broadcast("event:createPatient", {});
+                        else $rootScope.$broadcast("event:updatePatient", {});
                         ngDialog.close();
                     }                    
                 }
@@ -121,6 +127,12 @@ angular.module('bahmni.registration')
                 };
 
                 $scope.$on('event:openStartVisitPopup', function () {
+                    $scope.patientRegisterType = "CREATE"
+                    $scope.startVisitPopUpHandler();
+                });
+
+                $scope.$on('event:openStartVisitPopupForEdit', function () {
+                    $scope.patientRegisterType = "EDIT"
                     $scope.startVisitPopUpHandler();
                 });
 

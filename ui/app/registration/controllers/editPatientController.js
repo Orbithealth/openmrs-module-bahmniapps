@@ -55,6 +55,15 @@ angular.module('bahmni.registration')
                 spinner.forPromise($q.all([getPatientPromise, isDigitized]));
             })();
 
+            $scope.submit = function(e) {
+                e.preventDefault()
+                console.log("logger");
+                $rootScope.$broadcast("event:openStartVisitPopupForEdit", {});
+              };
+
+            $scope.$on('event:updatePatient', function () {
+                $scope.update();
+            });
             $scope.update = function () {
                 addNewRelationships();
                 var errorMessages = Bahmni.Common.Util.ValidationUtil.validate($scope.patient, $scope.patientConfiguration.attributeTypes);
