@@ -21,6 +21,14 @@
                     <label for="name"><strong>{{ ::'REGISTRATION_LABEL_NAME' | translate}}</strong></label>
                     <input tabindex="4" type="text" id="name" ng-model="searchParameters.name" placeholder="{{ ::'REGISTRATION_LABEL_ENTER_NAME' | translate}}">
                 </article>
+                <article class="fl">
+                    <label for="name"><strong>{{ ::'REGISTRATION_LABEL_FATHER_NAME' | translate}}</strong></label>
+                    <input tabindex="4" type="text" id="name" ng-model="searchParameters.fatherName" placeholder="{{ ::'REGISTRATION_LABEL_ENTER_FATHER_NAME' | translate}}">
+                </article>
+                <article class="fl">
+                    <label for="name"><strong>{{ ::'REGISTRATION_LABEL_GFATHER_NAME' | translate}}</strong></label>
+                    <input tabindex="4" type="text" id="name" ng-model="searchParameters.gFatherName" placeholder="{{ ::'REGISTRATION_LABEL_ENTER_GFATHER_NAME' | translate}}">
+                </article>
                 <article class="fl" ng-if="::customAttributesSearchConfig.show">
                     <label for="name"><strong>{{::customAttributesSearchConfig.label | translate}}</strong></label>
                     <input tabindex="5" type="text" id="customAttribute" ng-model="searchParameters.customAttribute" placeholder="{{::customAttributesSearchConfig.placeholder | translate}}">
@@ -69,7 +77,7 @@
             </tr>
             </thead>
             <tbody>
-            <tr ng-repeat="result in results">
+            <tr ng-repeat="result in results | filter : {givenName:searchParameters.name, middleName:searchParameters.fatherName, familyName:searchParameters.gFatherName}">
                 <td>
                     <a tabindex="{{ :: 8 + $index + 1 }}" ng-if="::(searchActions.length > 0)" ng-click="forPatient(result).doExtensionAction(searchActions[0])">
                         {{::result.identifier || 'Not Assigned'}}
